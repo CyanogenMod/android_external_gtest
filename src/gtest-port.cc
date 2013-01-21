@@ -31,6 +31,7 @@
 
 #include "gtest/internal/gtest-port.h"
 
+#include <errno.h>
 #include <limits.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -512,7 +513,7 @@ class CapturedStream {
     ::std::string str_template;
     const char* android_data = getenv("ANDROID_DATA");
     if (android_data == NULL) {
-      // If $ANDROID_DATA is not set, then fallback to /tmp.
+      // If $ANDROID_DATA is not set, then fall back to /tmp.
       str_template = "/tmp";
     } else {
       str_template = ::std::string(android_data) + "/local/tmp";
@@ -521,7 +522,8 @@ class CapturedStream {
     char* name_template = strdup(str_template.c_str());
     const int captured_fd = mkstemp(name_template);
     GTEST_CHECK_(captured_fd != -1) << "Unable to open temporary file "
-                                    << name_template;
+                                    << name_template << ": "
+                                    << strerror(errno);
     filename_ = name_template;
     free(name_template);
     name_template = NULL;
@@ -553,6 +555,9 @@ class CapturedStream {
     }
 
     FILE* const file = posix::FOpen(filename_.c_str(), "r");
+    GTEST_CHECK_(file != NULL) << "Unable to open temporary file "
+                               << filename_.c_str() << ": "
+                               << strerror(errno);
     const String content = ReadEntireFile(file);
     posix::FClose(file);
     return content;
