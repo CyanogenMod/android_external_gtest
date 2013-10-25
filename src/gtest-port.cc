@@ -507,21 +507,18 @@ class CapturedStream {
     filename_ = temp_file_path;
 // ANDROID
 #elif GTEST_OS_LINUX_ANDROID
-    // Get $EXTERNAL_STORAGE from the environment, since this can change
-    // for shell users (fallback is /data/nativetest, for emulator users).
-    ::std::string external_storage = "/data/nativetest";
-    char *sdcard_path = getenv("EXTERNAL_STORAGE");
-    if (sdcard_path != NULL) {
-      // Check that $EXTERNAL_STORAGE exists and is writable before trying to use it.
-      struct stat sb;
-      if (stat(sdcard_path, &sb) != -1) {
-        if ((sb.st_mode & S_IWUSR) != 0) {
-          external_storage = sdcard_path;
-        }
-      }
+    // Attempt to create the temporary file in this directory:
+    //   $ANDROID_DATA/local/tmp
+    ::std::string str_template;
+    const char* android_data = getenv("ANDROID_DATA");
+    if (android_data == NULL) {
+      // If $ANDROID_DATA is not set, then fallback to /tmp.
+      str_template = "/tmp";
+    } else {
+      str_template = ::std::string(android_data) + "/local/tmp";
     }
-    external_storage += "/captured_stderr.XXXXXX";
-    char *name_template = strdup(external_storage.c_str());
+    str_template += "/captured_stderr.XXXXXX";
+    char* name_template = strdup(str_template.c_str());
     const int captured_fd = mkstemp(name_template);
     GTEST_CHECK_(captured_fd != -1) << "Unable to open temporary file "
                                     << name_template;
