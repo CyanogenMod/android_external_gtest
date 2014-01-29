@@ -52,7 +52,7 @@ define _define-test
 $(foreach file,$(1), \
   $(eval include $(CLEAR_VARS)) \
   $(eval LOCAL_CPP_EXTENSION := .cc) \
-  $(eval LOCAL_SRC_FILES := $(file) production.cc) \
+  $(eval LOCAL_SRC_FILES := $(file)) \
   $(eval LOCAL_C_INCLUDES := $(libgtest_test$(4)_includes)) \
   $(eval LOCAL_MODULE := $(notdir $(file:%.cc=%))$(4)) \
   $(eval LOCAL_CFLAGS += $(3) -Wno-empty-body) \
@@ -74,23 +74,27 @@ $(call _define-test,$(1),,,,TARGET_OUT_DATA_NATIVE_TESTS)
 endef
 
 sources := \
-  gtest-death-test_test.cc \
-  gtest-filepath_test.cc \
-  gtest-linked_ptr_test.cc \
-  gtest-message_test.cc \
-  gtest-options_test.cc \
-  gtest-port_test.cc \
-  gtest_environment_test.cc \
-  gtest_no_test_unittest.cc \
-  gtest_pred_impl_unittest.cc \
-  gtest_premature_exit_test.cc \
-  gtest_repeat_test.cc \
-  gtest-test-part_test.cc \
-  gtest-typed-test_test.cc \
-  gtest-typed-test2_test.cc \
-  gtest_stress_test.cc \
-  gtest_unittest.cc \
-  gtest_prod_test.cc \
+    gtest_all_test.cc \
+    gtest-death-test_test.cc \
+    gtest_environment_test.cc \
+    gtest-listener_test.cc \
+    gtest_main_unittest.cc \
+    gtest_no_test_unittest.cc \
+    gtest-param-test2_test.cc \
+    gtest_premature_exit_test.cc \
+    gtest_repeat_test.cc \
+    gtest_sole_header_test.cc \
+    gtest_stress_test.cc \
+    gtest-unittest-api_test.cc \
+
+# We don't have exceptions.
+#    gtest-death-test_ex_test.cc \
+#    gtest_throw_on_failure_ex_test.cc \
+# We don't have tr1::tuple.
+#    gtest-tuple_test.cc \
+# These don't build.
+#    gtest-param-test_test.cc \
+#    gtest-printers_test.cc \
 
 $(call host-test, $(sources))
 $(call target-test, $(sources))
