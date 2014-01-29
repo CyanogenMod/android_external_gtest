@@ -70,13 +70,7 @@ include $(BUILD_HOST_STATIC_LIBRARY)
 
 include $(CLEAR_VARS)
 
-ifeq ($(TARGET_ARCH), arm)
-   LOCAL_SDK_VERSION := 8
-else
-# NDK support of other archs (ie. x86 and mips) are only available after android-9
-   LOCAL_SDK_VERSION := 9
-endif
-
+LOCAL_SDK_VERSION := 9
 LOCAL_NDK_STL_VARIANT := stlport_static
 
 LOCAL_CPP_EXTENSION := .cc
@@ -92,13 +86,7 @@ include $(BUILD_STATIC_LIBRARY)
 
 include $(CLEAR_VARS)
 
-ifeq ($(TARGET_ARCH), arm)
-   LOCAL_SDK_VERSION := 8
-else
-# NDK support of other archs (ie. x86 and mips) are only available after android-9
-   LOCAL_SDK_VERSION := 9
-endif
-
+LOCAL_SDK_VERSION := 9
 LOCAL_NDK_STL_VARIANT := stlport_static
 
 LOCAL_CPP_EXTENSION := .cc
