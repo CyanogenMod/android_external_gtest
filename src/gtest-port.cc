@@ -52,6 +52,11 @@
 # include <mach/vm_map.h>
 #endif  // GTEST_OS_MAC
 
+#if GTEST_OS_QNX
+# include <devctl.h>
+# include <sys/procfs.h>
+#endif  // GTEST_OS_QNX
+
 #include "gtest/gtest-spi.h"
 #include "gtest/gtest-message.h"
 #include "gtest/internal/gtest-internal.h"
@@ -94,6 +99,26 @@ size_t GetThreadCount() {
                   reinterpret_cast<vm_address_t>(thread_list),
                   sizeof(thread_t) * thread_count);
     return static_cast<size_t>(thread_count);
+  } else {
+    return 0;
+  }
+}
+
+#elif GTEST_OS_QNX
+
+// Returns the number of threads running in the process, or 0 to indicate that
+// we cannot detect it.
+size_t GetThreadCount() {
+  const int fd = open("/proc/self/as", O_RDONLY);
+  if (fd < 0) {
+    return 0;
+  }
+  procfs_info process_info;
+  const int status =
+      devctl(fd, DCMD_PROC_INFO, &process_info, sizeof(process_info), NULL);
+  close(fd);
+  if (status == EOK) {
+    return static_cast<size_t>(process_info.num_threads);
   } else {
     return 0;
   }
@@ -223,7 +248,7 @@ bool AtomMatchesChar(bool escaped, char pattern_char, char ch) {
 }
 
 // Helper function used by ValidateRegex() to format error messages.
-String FormatRegexSyntaxError(const char* regex, int index) {
+std::string FormatRegexSyntaxError(const char* regex, int index) {
   return (Message() << "Syntax error at index " << index
           << " in simple regular expression \"" << regex << "\": ").GetString();
 }
@@ -430,15 +455,15 @@ const char kUnknownFile[] = "unknown file";
 // Formats a source file path and a line number as they would appear
 // in an error message from the compiler used to compile this code.
 GTEST_API_ ::std::string FormatFileLocation(const char* file, int line) {
-  const char* const file_name = file == NULL ? kUnknownFile : file;
+  const std::string file_name(file == NULL ? kUnknownFile : file);
 
   if (line < 0) {
-    return String::Format("%s:", file_name).c_str();
+    return file_name + ":";
   }
 #ifdef _MSC_VER
-  return String::Format("%s(%d):", file_name, line).c_str();
+  return file_name + "(" + StreamableToString(line) + "):";
 #else
-  return String::Format("%s:%d:", file_name, line).c_str();
+  return file_name + ":" + StreamableToString(line) + ":";
 #endif  // _MSC_VER
 }
 
@@ -449,12 +474,12 @@ GTEST_API_ ::std::string FormatFileLocation(const char* file, int line) {
 // to the file location it produces, unlike FormatFileLocation().
 GTEST_API_ ::std::string FormatCompilerIndependentFileLocation(
     const char* file, int line) {
-  const char* const file_name = file == NULL ? kUnknownFile : file;
+  const std::string file_name(file == NULL ? kUnknownFile : file);
 
   if (line < 0)
     return file_name;
   else
-    return String::Format("%s:%d", file_name, line).c_str();
+    return file_name + ":" + StreamableToString(line);
 }
 
 
@@ -489,8 +514,7 @@ GTestLog::~GTestLog() {
 class CapturedStream {
  public:
   // The ctor redirects the stream to a temporary file.
-  CapturedStream(int fd) : fd_(fd), uncaptured_fd_(dup(fd)) {
-
+  explicit CapturedStream(int fd) : fd_(fd), uncaptured_fd_(dup(fd)) {
 # if GTEST_OS_WINDOWS
     char temp_dir_path[MAX_PATH + 1] = { '\0' };  // NOLINT
     char temp_file_path[MAX_PATH + 1] = { '\0' };  // NOLINT
@@ -506,7 +530,7 @@ class CapturedStream {
     GTEST_CHECK_(captured_fd != -1) << "Unable to open temporary file "
                                     << temp_file_path;
     filename_ = temp_file_path;
-// ANDROID
+// BEGIN android-changed
 #elif GTEST_OS_LINUX_ANDROID
     // Attempt to create the temporary file in this directory:
     //   $ANDROID_DATA/local/tmp
@@ -527,12 +551,31 @@ class CapturedStream {
     filename_ = name_template;
     free(name_template);
     name_template = NULL;
-// END ANDROID
+// END android-changed
 # else
-    // There's no guarantee that a test has write access to the
-    // current directory, so we create the temporary file in the /tmp
-    // directory instead.
+    // There's no guarantee that a test has write access to the current
+    // directory, so we create the temporary file in the /tmp directory
+    // instead. We use /tmp on most systems, and /sdcard on Android.
+    // That's because Android doesn't have /tmp.
+#  if GTEST_OS_LINUX_ANDROID
+    // Note: Android applications are expected to call the framework's
+    // Context.getExternalStorageDirectory() method through JNI to get
+    // the location of the world-writable SD Card directory. However,
+    // this requires a Context handle, which cannot be retrieved
+    // globally from native code. Doing so also precludes running the
+    // code as part of a regular standalone executable, which doesn't
+    // run in a Dalvik process (e.g. when running it through 'adb shell').
+    //
+    // The location /sdcard is directly accessible from native code
+    // and is the only location (unofficially) supported by the Android
+    // team. It's generally a symlink to the real SD Card mount point
+    // which can be /mnt/sdcard, /mnt/sdcard0, /system/media/sdcard, or
+    // other OEM-customized locations. Never rely on these, and always
+    // use /sdcard.
+    char name_template[] = "/sdcard/gtest_captured_stream.XXXXXX";
+#  else
     char name_template[] = "/tmp/captured_stream.XXXXXX";
+#  endif  // GTEST_OS_LINUX_ANDROID
     const int captured_fd = mkstemp(name_template);
     filename_ = name_template;
 # endif  // GTEST_OS_WINDOWS
@@ -545,7 +588,7 @@ class CapturedStream {
     remove(filename_.c_str());
   }
 
-  String GetCapturedString() {
+  std::string GetCapturedString() {
     if (uncaptured_fd_ != -1) {
       // Restores the original stream.
       fflush(NULL);
@@ -555,17 +598,19 @@ class CapturedStream {
     }
 
     FILE* const file = posix::FOpen(filename_.c_str(), "r");
+// BEGIN android-changed
     GTEST_CHECK_(file != NULL) << "Unable to open temporary file "
                                << filename_.c_str() << ": "
                                << strerror(errno);
-    const String content = ReadEntireFile(file);
+// END android-changed
+    const std::string content = ReadEntireFile(file);
     posix::FClose(file);
     return content;
   }
 
  private:
-  // Reads the entire content of a file as a String.
-  static String ReadEntireFile(FILE* file);
+  // Reads the entire content of a file as an std::string.
+  static std::string ReadEntireFile(FILE* file);
 
   // Returns the size (in bytes) of a file.
   static size_t GetFileSize(FILE* file);
@@ -585,7 +630,7 @@ size_t CapturedStream::GetFileSize(FILE* file) {
 }
 
 // Reads the entire content of a file as a string.
-String CapturedStream::ReadEntireFile(FILE* file) {
+std::string CapturedStream::ReadEntireFile(FILE* file) {
   const size_t file_size = GetFileSize(file);
   char* const buffer = new char[file_size];
 
@@ -601,7 +646,7 @@ String CapturedStream::ReadEntireFile(FILE* file) {
     bytes_read += bytes_last_read;
   } while (bytes_last_read > 0 && bytes_read < file_size);
 
-  const String content(buffer, bytes_read);
+  const std::string content(buffer, bytes_read);
   delete[] buffer;
 
   return content;
@@ -624,8 +669,8 @@ void CaptureStream(int fd, const char* stream_name, CapturedStream** stream) {
 }
 
 // Stops capturing the output stream and returns the captured string.
-String GetCapturedStream(CapturedStream** captured_stream) {
-  const String content = (*captured_stream)->GetCapturedString();
+std::string GetCapturedStream(CapturedStream** captured_stream) {
+  const std::string content = (*captured_stream)->GetCapturedString();
 
   delete *captured_stream;
   *captured_stream = NULL;
@@ -644,21 +689,37 @@ void CaptureStderr() {
 }
 
 // Stops capturing stdout and returns the captured string.
-String GetCapturedStdout() { return GetCapturedStream(&g_captured_stdout); }
+std::string GetCapturedStdout() {
+  return GetCapturedStream(&g_captured_stdout);
+}
 
 // Stops capturing stderr and returns the captured string.
-String GetCapturedStderr() { return GetCapturedStream(&g_captured_stderr); }
+std::string GetCapturedStderr() {
+  return GetCapturedStream(&g_captured_stderr);
+}
 
 #endif  // GTEST_HAS_STREAM_REDIRECTION
 
 #if GTEST_HAS_DEATH_TEST
 
 // A copy of all command line arguments.  Set by InitGoogleTest().
-::std::vector<String> g_argvs;
+::std::vector<testing::internal::string> g_argvs;
 
-// Returns the command line as a vector of strings.
-const ::std::vector<String>& GetArgvs() { return g_argvs; }
+static const ::std::vector<testing::internal::string>* g_injected_test_argvs =
+                                        NULL;  // Owned.
 
+void SetInjectableArgvs(const ::std::vector<testing::internal::string>* argvs) {
+  if (g_injected_test_argvs != argvs)
+    delete g_injected_test_argvs;
+  g_injected_test_argvs = argvs;
+}
+
+const ::std::vector<testing::internal::string>& GetInjectableArgvs() {
+  if (g_injected_test_argvs != NULL) {
+    return *g_injected_test_argvs;
+  }
+  return g_argvs;
+}
 #endif  // GTEST_HAS_DEATH_TEST
 
 #if GTEST_OS_WINDOWS_MOBILE
@@ -673,8 +734,8 @@ void Abort() {
 // Returns the name of the environment variable corresponding to the
 // given flag.  For example, FlagToEnvVar("foo") will return
 // "GTEST_FOO" in the open-source version.
-static String FlagToEnvVar(const char* flag) {
-  const String full_flag =
+static std::string FlagToEnvVar(const char* flag) {
+  const std::string full_flag =
       (Message() << GTEST_FLAG_PREFIX_ << flag).GetString();
 
   Message env_var;
@@ -731,7 +792,7 @@ bool ParseInt32(const Message& src_text, const char* str, Int32* value) {
 //
 // The value is considered true iff it's not "0".
 bool BoolFromGTestEnv(const char* flag, bool default_value) {
-  const String env_var = FlagToEnvVar(flag);
+  const std::string env_var = FlagToEnvVar(flag);
   const char* const string_value = posix::GetEnv(env_var.c_str());
   return string_value == NULL ?
       default_value : strcmp(string_value, "0") != 0;
@@ -741,7 +802,7 @@ bool BoolFromGTestEnv(const char* flag, bool default_value) {
 // variable corresponding to the given flag; if it isn't set or
 // doesn't represent a valid 32-bit integer, returns default_value.
 Int32 Int32FromGTestEnv(const char* flag, Int32 default_value) {
-  const String env_var = FlagToEnvVar(flag);
+  const std::string env_var = FlagToEnvVar(flag);
   const char* const string_value = posix::GetEnv(env_var.c_str());
   if (string_value == NULL) {
     // The environment variable is not set.
@@ -763,7 +824,7 @@ Int32 Int32FromGTestEnv(const char* flag, Int32 default_value) {
 // Reads and returns the string environment variable corresponding to
 // the given flag; if it's not set, returns default_value.
 const char* StringFromGTestEnv(const char* flag, const char* default_value) {
-  const String env_var = FlagToEnvVar(flag);
+  const std::string env_var = FlagToEnvVar(flag);
   const char* const value = posix::GetEnv(env_var.c_str());
   return value == NULL ? default_value : value;
 }

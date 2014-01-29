@@ -36,19 +36,18 @@ libgtest_host_includes := \
   $(LOCAL_PATH)/.. \
   $(LOCAL_PATH)/../include
 
+libgtest_cflags := \
+  -Wno-missing-field-initializers \
+
 #######################################################################
 # gtest lib host
 
 include $(CLEAR_VARS)
 
 LOCAL_CPP_EXTENSION := .cc
-
 LOCAL_SRC_FILES := gtest-all.cc
-
 LOCAL_C_INCLUDES := $(libgtest_host_includes)
-
-LOCAL_CFLAGS += -O0
-
+LOCAL_CFLAGS += $(libgtest_cflags)
 LOCAL_MODULE := libgtest_host
 
 include $(BUILD_HOST_STATIC_LIBRARY)
@@ -59,13 +58,9 @@ include $(BUILD_HOST_STATIC_LIBRARY)
 include $(CLEAR_VARS)
 
 LOCAL_CPP_EXTENSION := .cc
-
 LOCAL_SRC_FILES := gtest_main.cc
-
 LOCAL_C_INCLUDES := $(libgtest_host_includes)
-
-LOCAL_CFLAGS += -O0
-
+LOCAL_CFLAGS += $(libgtest_cflags)
 LOCAL_MODULE := libgtest_main_host
 
 include $(BUILD_HOST_STATIC_LIBRARY)
@@ -85,11 +80,9 @@ endif
 LOCAL_NDK_STL_VARIANT := stlport_static
 
 LOCAL_CPP_EXTENSION := .cc
-
 LOCAL_SRC_FILES := gtest-all.cc
-
 LOCAL_C_INCLUDES := $(libgtest_target_includes)
-
+LOCAL_CFLAGS += $(libgtest_cflags)
 LOCAL_MODULE := libgtest
 
 include $(BUILD_STATIC_LIBRARY)
@@ -109,11 +102,9 @@ endif
 LOCAL_NDK_STL_VARIANT := stlport_static
 
 LOCAL_CPP_EXTENSION := .cc
-
 LOCAL_SRC_FILES := gtest_main.cc
-
 LOCAL_C_INCLUDES := $(libgtest_target_includes)
-
+LOCAL_CFLAGS += $(libgtest_cflags)
 LOCAL_MODULE := libgtest_main
 
 include $(BUILD_STATIC_LIBRARY)
