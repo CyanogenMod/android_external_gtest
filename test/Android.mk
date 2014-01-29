@@ -30,10 +30,12 @@ libgtest_test_common_includes := \
 libgtest_test_includes := $(libgtest_test_common_includes) bionic external/stlport/stlport
 libgtest_test_static_lib := libgtest_main libgtest
 libgtest_test_shared_lib := libstlport
+libgtest_test_ldflags :=
 
 libgtest_test_host_includes := $(libgtest_test_common_includes)
 libgtest_test_host_static_lib := libgtest_main_host libgtest_host
 libgtest_test_host_shared_lib :=
+libgtest_test_host_ldflags := -lpthread
 
 # $(2) and $(4) must be set or cleared in sync. $(2) is used to
 # generate the right make target (host vs device). $(4) is used in the
@@ -50,10 +52,11 @@ define _define-test
 $(foreach file,$(1), \
   $(eval include $(CLEAR_VARS)) \
   $(eval LOCAL_CPP_EXTENSION := .cc) \
-  $(eval LOCAL_SRC_FILES := $(file)) \
+  $(eval LOCAL_SRC_FILES := $(file) production.cc) \
   $(eval LOCAL_C_INCLUDES := $(libgtest_test$(4)_includes)) \
   $(eval LOCAL_MODULE := $(notdir $(file:%.cc=%))$(4)) \
-  $(eval LOCAL_CFLAGS += $(3)) \
+  $(eval LOCAL_CFLAGS += $(3) -Wno-empty-body) \
+  $(eval LOCAL_LDFLAGS += $(libgtest_test$(4)_ldflags)) \
   $(eval LOCAL_STATIC_LIBRARIES := $(libgtest_test$(4)_static_lib)) \
   $(eval LOCAL_SHARED_LIBRARIES := $(libgtest_test$(4)_shared_lib)) \
   $(if $(2),,$(eval LOCAL_MODULE_TAGS := tests)) \
@@ -80,13 +83,14 @@ sources := \
   gtest_environment_test.cc \
   gtest_no_test_unittest.cc \
   gtest_pred_impl_unittest.cc \
+  gtest_premature_exit_test.cc \
   gtest_repeat_test.cc \
   gtest-test-part_test.cc \
   gtest-typed-test_test.cc \
   gtest-typed-test2_test.cc \
   gtest_stress_test.cc \
   gtest_unittest.cc \
-  gtest_prod_test.cc
+  gtest_prod_test.cc \
 
 $(call host-test, $(sources))
 $(call target-test, $(sources))
