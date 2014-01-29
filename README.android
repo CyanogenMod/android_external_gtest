@@ -19,11 +19,11 @@ Removed non Android build files:
  rm -rf m4/
  rm -rf make/
  rm -rf msvc/
+ rm -rf samples/
+ rm -rf scripts/
  rm -rf scons/
  rm -rf xcode/
  rm -rf cmake/
  rm -rf fused-src/
-
-TODO: remove samples/ and scripts/?
 
 TODO: fix /sdcard path in test/gtest-filepath_test.cc.
