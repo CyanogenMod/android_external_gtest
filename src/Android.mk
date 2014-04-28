@@ -29,12 +29,12 @@
 LOCAL_PATH := $(call my-dir)
 
 libgtest_target_includes := \
-    $(LOCAL_PATH)/.. \
-    $(LOCAL_PATH)/../include
+  $(LOCAL_PATH)/.. \
+  $(LOCAL_PATH)/../include \
 
 libgtest_host_includes := \
   $(LOCAL_PATH)/.. \
-  $(LOCAL_PATH)/../include
+  $(LOCAL_PATH)/../include \
 
 libgtest_cflags := \
   -Wno-missing-field-initializers \
@@ -95,4 +95,63 @@ LOCAL_C_INCLUDES := $(libgtest_target_includes)
 LOCAL_CFLAGS += $(libgtest_cflags)
 LOCAL_MODULE := libgtest_main
 
+include $(BUILD_STATIC_LIBRARY)
+
+#######################################################################
+# libc++
+
+#######################################################################
+# gtest lib host
+
+include $(CLEAR_VARS)
+
+LOCAL_CPP_EXTENSION := .cc
+LOCAL_SRC_FILES := gtest-all.cc
+LOCAL_C_INCLUDES := $(libgtest_host_includes)
+LOCAL_CFLAGS += $(libgtest_cflags)
+LOCAL_MODULE := libgtest_libc++_host
+
+include external/libcxx/libcxx.mk
+include $(BUILD_HOST_STATIC_LIBRARY)
+
+#######################################################################
+# gtest_main lib host
+
+include $(CLEAR_VARS)
+
+LOCAL_CPP_EXTENSION := .cc
+LOCAL_SRC_FILES := gtest_main.cc
+LOCAL_C_INCLUDES := $(libgtest_host_includes)
+LOCAL_CFLAGS += $(libgtest_cflags)
+LOCAL_MODULE := libgtest_main_libc++_host
+
+include external/libcxx/libcxx.mk
+include $(BUILD_HOST_STATIC_LIBRARY)
+
+#######################################################################
+# gtest lib target
+
+include $(CLEAR_VARS)
+
+LOCAL_CPP_EXTENSION := .cc
+LOCAL_SRC_FILES := gtest-all.cc
+LOCAL_C_INCLUDES := $(libgtest_target_includes)
+LOCAL_CFLAGS += $(libgtest_cflags)
+LOCAL_MODULE := libgtest_libc++
+
+include external/libcxx/libcxx.mk
+include $(BUILD_STATIC_LIBRARY)
+
+#######################################################################
+# gtest_main lib target
+
+include $(CLEAR_VARS)
+
+LOCAL_CPP_EXTENSION := .cc
+LOCAL_SRC_FILES := gtest_main.cc
+LOCAL_C_INCLUDES := $(libgtest_target_includes)
+LOCAL_CFLAGS += $(libgtest_cflags)
+LOCAL_MODULE := libgtest_main_libc++
+
+include external/libcxx/libcxx.mk
 include $(BUILD_STATIC_LIBRARY)
