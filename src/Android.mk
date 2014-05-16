@@ -97,6 +97,8 @@ LOCAL_MODULE := libgtest_main
 
 include $(BUILD_STATIC_LIBRARY)
 
+# Don't build for unbundled branches
+ifeq (,$(TARGET_BUILD_APPS))
 #######################################################################
 # libc++
 
@@ -155,3 +157,4 @@ LOCAL_MODULE := libgtest_main_libc++
 
 include external/libcxx/libcxx.mk
 include $(BUILD_STATIC_LIBRARY)
+endif
