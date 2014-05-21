@@ -107,6 +107,7 @@ ifeq (,$(TARGET_BUILD_APPS))
 
 include $(CLEAR_VARS)
 
+LOCAL_CLANG := true
 LOCAL_CPP_EXTENSION := .cc
 LOCAL_SRC_FILES := gtest-all.cc
 LOCAL_C_INCLUDES := $(libgtest_host_includes)
@@ -121,6 +122,7 @@ include $(BUILD_HOST_STATIC_LIBRARY)
 
 include $(CLEAR_VARS)
 
+LOCAL_CLANG := true
 LOCAL_CPP_EXTENSION := .cc
 LOCAL_SRC_FILES := gtest_main.cc
 LOCAL_C_INCLUDES := $(libgtest_host_includes)
@@ -135,6 +137,7 @@ include $(BUILD_HOST_STATIC_LIBRARY)
 
 include $(CLEAR_VARS)
 
+LOCAL_CLANG := true
 LOCAL_CPP_EXTENSION := .cc
 LOCAL_SRC_FILES := gtest-all.cc
 LOCAL_C_INCLUDES := $(libgtest_target_includes)
@@ -149,6 +152,7 @@ include $(BUILD_STATIC_LIBRARY)
 
 include $(CLEAR_VARS)
 
+LOCAL_CLANG := true
 LOCAL_CPP_EXTENSION := .cc
 LOCAL_SRC_FILES := gtest_main.cc
 LOCAL_C_INCLUDES := $(libgtest_target_includes)
