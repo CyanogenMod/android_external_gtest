@@ -27,15 +27,15 @@ libgtest_test_common_includes := \
     $(LOCAL_PATH)/../include \
     $(LOCAL_PATH)/..
 
-libgtest_test_includes := $(libgtest_test_common_includes) bionic external/stlport/stlport
+libgtest_test_includes := $(libgtest_test_common_includes)
 libgtest_test_static_lib := libgtest_main libgtest
-libgtest_test_shared_lib := libstlport
 libgtest_test_ldflags :=
+libgtest_test_cxx_stl := stlport
 
 libgtest_test_host_includes := $(libgtest_test_common_includes)
 libgtest_test_host_static_lib := libgtest_main_host libgtest_host
-libgtest_test_host_shared_lib :=
 libgtest_test_host_ldflags := -lpthread
+libgtest_test_host_cxx_stl := default
 
 # $(2) and $(4) must be set or cleared in sync. $(2) is used to
 # generate the right make target (host vs device). $(4) is used in the
@@ -59,6 +59,7 @@ $(foreach file,$(1), \
   $(eval LOCAL_LDFLAGS += $(libgtest_test$(4)_ldflags)) \
   $(eval LOCAL_STATIC_LIBRARIES := $(libgtest_test$(4)_static_lib)) \
   $(eval LOCAL_SHARED_LIBRARIES := $(libgtest_test$(4)_shared_lib)) \
+  $(eval LOCAL_CXX_STL := $(libgtest_test$(4)_cxx_stl)) \
   $(if $(2),,$(eval LOCAL_MODULE_TAGS := tests)) \
   $(eval LOCAL_MODULE_PATH := $($(5))) \
   $(eval include $(BUILD_$(2)EXECUTABLE)) \
