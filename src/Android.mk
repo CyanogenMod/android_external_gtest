@@ -43,6 +43,7 @@ libgtest_cflags := \
 # gtest lib host
 
 include $(CLEAR_VARS)
+LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 
 LOCAL_CPP_EXTENSION := .cc
 LOCAL_SRC_FILES := gtest-all.cc
@@ -57,6 +58,7 @@ include $(BUILD_HOST_STATIC_LIBRARY)
 # gtest_main lib host
 
 include $(CLEAR_VARS)
+LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 
 LOCAL_CPP_EXTENSION := .cc
 LOCAL_SRC_FILES := gtest_main.cc
@@ -71,6 +73,7 @@ include $(BUILD_HOST_STATIC_LIBRARY)
 # gtest lib target
 
 include $(CLEAR_VARS)
+LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 
 LOCAL_SDK_VERSION := 9
 LOCAL_NDK_STL_VARIANT := stlport_static
@@ -87,6 +90,7 @@ include $(BUILD_STATIC_LIBRARY)
 # gtest_main lib target
 
 include $(CLEAR_VARS)
+LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 
 LOCAL_SDK_VERSION := 9
 LOCAL_NDK_STL_VARIANT := stlport_static
@@ -108,6 +112,7 @@ ifeq (,$(TARGET_BUILD_APPS))
 # gtest lib host
 
 include $(CLEAR_VARS)
+LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 
 LOCAL_CLANG := true
 LOCAL_CPP_EXTENSION := .cc
@@ -116,6 +121,7 @@ LOCAL_C_INCLUDES := $(libgtest_host_includes)
 LOCAL_CFLAGS += $(libgtest_cflags)
 LOCAL_MODULE := libgtest_libc++_host
 LOCAL_MULTILIB := both
+LOCAL_ADDRESS_SANITIZER := false
 
 include external/libcxx/libcxx.mk
 include $(BUILD_HOST_STATIC_LIBRARY)
@@ -124,6 +130,7 @@ include $(BUILD_HOST_STATIC_LIBRARY)
 # gtest_main lib host
 
 include $(CLEAR_VARS)
+LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 
 LOCAL_CLANG := true
 LOCAL_CPP_EXTENSION := .cc
@@ -132,6 +139,7 @@ LOCAL_C_INCLUDES := $(libgtest_host_includes)
 LOCAL_CFLAGS += $(libgtest_cflags)
 LOCAL_MODULE := libgtest_main_libc++_host
 LOCAL_MULTILIB := both
+LOCAL_ADDRESS_SANITIZER := false
 
 include external/libcxx/libcxx.mk
 include $(BUILD_HOST_STATIC_LIBRARY)
@@ -140,6 +148,7 @@ include $(BUILD_HOST_STATIC_LIBRARY)
 # gtest lib target
 
 include $(CLEAR_VARS)
+LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 
 LOCAL_CLANG := true
 LOCAL_CPP_EXTENSION := .cc
@@ -147,6 +156,7 @@ LOCAL_SRC_FILES := gtest-all.cc
 LOCAL_C_INCLUDES := $(libgtest_target_includes)
 LOCAL_CFLAGS += $(libgtest_cflags)
 LOCAL_MODULE := libgtest_libc++
+LOCAL_ADDRESS_SANITIZER := false
 
 include external/libcxx/libcxx.mk
 include $(BUILD_STATIC_LIBRARY)
@@ -155,6 +165,7 @@ include $(BUILD_STATIC_LIBRARY)
 # gtest_main lib target
 
 include $(CLEAR_VARS)
+LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 
 LOCAL_CLANG := true
 LOCAL_CPP_EXTENSION := .cc
@@ -162,6 +173,7 @@ LOCAL_SRC_FILES := gtest_main.cc
 LOCAL_C_INCLUDES := $(libgtest_target_includes)
 LOCAL_CFLAGS += $(libgtest_cflags)
 LOCAL_MODULE := libgtest_main_libc++
+LOCAL_ADDRESS_SANITIZER := false
 
 include external/libcxx/libcxx.mk
 include $(BUILD_STATIC_LIBRARY)
