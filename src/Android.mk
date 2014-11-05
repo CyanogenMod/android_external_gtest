@@ -51,6 +51,7 @@ LOCAL_C_INCLUDES := $(libgtest_host_includes)
 LOCAL_CFLAGS += $(libgtest_cflags)
 LOCAL_MODULE := libgtest_host
 LOCAL_MULTILIB := both
+LOCAL_CXX_STL := libstdc++
 
 include $(BUILD_HOST_STATIC_LIBRARY)
 
@@ -66,6 +67,7 @@ LOCAL_C_INCLUDES := $(libgtest_host_includes)
 LOCAL_CFLAGS += $(libgtest_cflags)
 LOCAL_MODULE := libgtest_main_host
 LOCAL_MULTILIB := both
+LOCAL_CXX_STL := libstdc++
 
 include $(BUILD_HOST_STATIC_LIBRARY)
 
@@ -122,8 +124,8 @@ LOCAL_CFLAGS += $(libgtest_cflags)
 LOCAL_MODULE := libgtest_libc++_host
 LOCAL_MULTILIB := both
 LOCAL_ADDRESS_SANITIZER := false
+LOCAL_CXX_STL := libc++
 
-include external/libcxx/libcxx.mk
 include $(BUILD_HOST_STATIC_LIBRARY)
 
 #######################################################################
@@ -140,8 +142,8 @@ LOCAL_CFLAGS += $(libgtest_cflags)
 LOCAL_MODULE := libgtest_main_libc++_host
 LOCAL_MULTILIB := both
 LOCAL_ADDRESS_SANITIZER := false
+LOCAL_CXX_STL := libc++
 
-include external/libcxx/libcxx.mk
 include $(BUILD_HOST_STATIC_LIBRARY)
 
 #######################################################################
@@ -157,8 +159,8 @@ LOCAL_C_INCLUDES := $(libgtest_target_includes)
 LOCAL_CFLAGS += $(libgtest_cflags)
 LOCAL_MODULE := libgtest_libc++
 LOCAL_ADDRESS_SANITIZER := false
+LOCAL_CXX_STL := libc++
 
-include external/libcxx/libcxx.mk
 include $(BUILD_STATIC_LIBRARY)
 
 #######################################################################
@@ -174,7 +176,7 @@ LOCAL_C_INCLUDES := $(libgtest_target_includes)
 LOCAL_CFLAGS += $(libgtest_cflags)
 LOCAL_MODULE := libgtest_main_libc++
 LOCAL_ADDRESS_SANITIZER := false
+LOCAL_CXX_STL := libc++
 
-include external/libcxx/libcxx.mk
 include $(BUILD_STATIC_LIBRARY)
 endif
