@@ -35,7 +35,7 @@ libgtest_test_cxx_stl := stlport
 libgtest_test_host_includes := $(libgtest_test_common_includes)
 libgtest_test_host_static_lib := libgtest_main_host libgtest_host
 libgtest_test_host_ldflags := -lpthread
-libgtest_test_host_cxx_stl := libstdc++
+libgtest_test_host_cxx_stl := libc++
 
 # $(2) and $(4) must be set or cleared in sync. $(2) is used to
 # generate the right make target (host vs device). $(4) is used in the
