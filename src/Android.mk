@@ -52,7 +52,7 @@ LOCAL_CPP_EXTENSION := .cc
 LOCAL_SRC_FILES := gtest-all.cc
 LOCAL_C_INCLUDES := $(libgtest_target_includes)
 LOCAL_CFLAGS += $(libgtest_cflags)
-LOCAL_MODULE := libgtest
+LOCAL_MODULE := libgtest_ndk
 
 include $(BUILD_STATIC_LIBRARY)
 
@@ -69,7 +69,7 @@ LOCAL_CPP_EXTENSION := .cc
 LOCAL_SRC_FILES := gtest_main.cc
 LOCAL_C_INCLUDES := $(libgtest_target_includes)
 LOCAL_CFLAGS += $(libgtest_cflags)
-LOCAL_MODULE := libgtest_main
+LOCAL_MODULE := libgtest_main_ndk
 
 include $(BUILD_STATIC_LIBRARY)
 
@@ -123,7 +123,7 @@ LOCAL_CPP_EXTENSION := .cc
 LOCAL_SRC_FILES := gtest-all.cc
 LOCAL_C_INCLUDES := $(libgtest_target_includes)
 LOCAL_CFLAGS += $(libgtest_cflags)
-LOCAL_MODULE := libgtest_libc++
+LOCAL_MODULE := libgtest
 LOCAL_ADDRESS_SANITIZER := false
 
 include $(BUILD_STATIC_LIBRARY)
@@ -139,7 +139,7 @@ LOCAL_CPP_EXTENSION := .cc
 LOCAL_SRC_FILES := gtest_main.cc
 LOCAL_C_INCLUDES := $(libgtest_target_includes)
 LOCAL_CFLAGS += $(libgtest_cflags)
-LOCAL_MODULE := libgtest_main_libc++
+LOCAL_MODULE := libgtest_main
 LOCAL_ADDRESS_SANITIZER := false
 
 include $(BUILD_STATIC_LIBRARY)
