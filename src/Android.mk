@@ -40,7 +40,7 @@ libgtest_cflags := \
   -Wno-missing-field-initializers \
 
 #######################################################################
-# gtest lib target
+# gtest lib for the NDK
 
 include $(CLEAR_VARS)
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
@@ -51,13 +51,14 @@ LOCAL_NDK_STL_VARIANT := stlport_static
 LOCAL_CPP_EXTENSION := .cc
 LOCAL_SRC_FILES := gtest-all.cc
 LOCAL_C_INCLUDES := $(libgtest_target_includes)
+LOCAL_CPPFLAGS := -std=gnu++98
 LOCAL_CFLAGS += $(libgtest_cflags)
 LOCAL_MODULE := libgtest_ndk
 
 include $(BUILD_STATIC_LIBRARY)
 
 #######################################################################
-# gtest_main lib target
+# gtest_main for the NDK
 
 include $(CLEAR_VARS)
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
@@ -68,6 +69,7 @@ LOCAL_NDK_STL_VARIANT := stlport_static
 LOCAL_CPP_EXTENSION := .cc
 LOCAL_SRC_FILES := gtest_main.cc
 LOCAL_C_INCLUDES := $(libgtest_target_includes)
+LOCAL_CPPFLAGS := -std=gnu++98
 LOCAL_CFLAGS += $(libgtest_cflags)
 LOCAL_MODULE := libgtest_main_ndk
 
