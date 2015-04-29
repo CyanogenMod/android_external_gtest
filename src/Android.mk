@@ -78,15 +78,10 @@ include $(BUILD_STATIC_LIBRARY)
 # Don't build for unbundled branches
 ifeq (,$(TARGET_BUILD_APPS))
 #######################################################################
-# libc++
-
-#######################################################################
 # gtest lib host
 
 include $(CLEAR_VARS)
-LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 
-LOCAL_CLANG := true
 LOCAL_CPP_EXTENSION := .cc
 LOCAL_SRC_FILES := gtest-all.cc
 LOCAL_C_INCLUDES := $(libgtest_host_includes)
@@ -101,9 +96,7 @@ include $(BUILD_HOST_STATIC_LIBRARY)
 # gtest_main lib host
 
 include $(CLEAR_VARS)
-LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 
-LOCAL_CLANG := true
 LOCAL_CPP_EXTENSION := .cc
 LOCAL_SRC_FILES := gtest_main.cc
 LOCAL_C_INCLUDES := $(libgtest_host_includes)
@@ -118,7 +111,6 @@ include $(BUILD_HOST_STATIC_LIBRARY)
 # gtest lib target
 
 include $(CLEAR_VARS)
-LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 
 LOCAL_CLANG := true
 LOCAL_CPP_EXTENSION := .cc
@@ -134,7 +126,6 @@ include $(BUILD_STATIC_LIBRARY)
 # gtest_main lib target
 
 include $(CLEAR_VARS)
-LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 
 LOCAL_CLANG := true
 LOCAL_CPP_EXTENSION := .cc
