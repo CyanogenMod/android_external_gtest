@@ -75,8 +75,6 @@ LOCAL_MODULE := libgtest_main_ndk
 
 include $(BUILD_STATIC_LIBRARY)
 
-# Don't build for unbundled branches
-ifeq (,$(TARGET_BUILD_APPS))
 #######################################################################
 # libc++
 
@@ -115,6 +113,8 @@ LOCAL_ADDRESS_SANITIZER := false
 include $(BUILD_HOST_STATIC_LIBRARY)
 
 #######################################################################
+# Don't build for unbundled branches
+ifeq (,$(TARGET_BUILD_APPS))
 # gtest lib target
 
 include $(CLEAR_VARS)
