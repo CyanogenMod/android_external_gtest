@@ -86,7 +86,7 @@ LOCAL_C_INCLUDES := $(libgtest_host_includes)
 LOCAL_CFLAGS += $(libgtest_cflags)
 LOCAL_MODULE := libgtest_host
 LOCAL_MULTILIB := both
-LOCAL_ADDRESS_SANITIZER := false
+LOCAL_SANITIZE := never
 
 include $(BUILD_HOST_STATIC_LIBRARY)
 
@@ -101,7 +101,7 @@ LOCAL_C_INCLUDES := $(libgtest_host_includes)
 LOCAL_CFLAGS += $(libgtest_cflags)
 LOCAL_MODULE := libgtest_main_host
 LOCAL_MULTILIB := both
-LOCAL_ADDRESS_SANITIZER := false
+LOCAL_SANITIZE := never
 
 include $(BUILD_HOST_STATIC_LIBRARY)
 
@@ -118,7 +118,7 @@ LOCAL_SRC_FILES := gtest-all.cc
 LOCAL_C_INCLUDES := $(libgtest_target_includes)
 LOCAL_CFLAGS += $(libgtest_cflags)
 LOCAL_MODULE := libgtest
-LOCAL_ADDRESS_SANITIZER := false
+LOCAL_SANITIZE := never
 
 include $(BUILD_STATIC_LIBRARY)
 
@@ -133,7 +133,7 @@ LOCAL_SRC_FILES := gtest_main.cc
 LOCAL_C_INCLUDES := $(libgtest_target_includes)
 LOCAL_CFLAGS += $(libgtest_cflags)
 LOCAL_MODULE := libgtest_main
-LOCAL_ADDRESS_SANITIZER := false
+LOCAL_SANITIZE := never
 
 include $(BUILD_STATIC_LIBRARY)
 endif
