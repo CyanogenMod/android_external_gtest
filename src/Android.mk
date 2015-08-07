@@ -87,6 +87,7 @@ LOCAL_CFLAGS += $(libgtest_cflags)
 LOCAL_MODULE := libgtest_host
 LOCAL_MULTILIB := both
 LOCAL_SANITIZE := never
+LOCAL_RTTI_FLAG := -frtti
 
 include $(BUILD_HOST_STATIC_LIBRARY)
 
@@ -119,6 +120,7 @@ LOCAL_C_INCLUDES := $(libgtest_target_includes)
 LOCAL_CFLAGS += $(libgtest_cflags)
 LOCAL_MODULE := libgtest
 LOCAL_SANITIZE := never
+LOCAL_RTTI_FLAG := -frtti
 
 include $(BUILD_STATIC_LIBRARY)
 
