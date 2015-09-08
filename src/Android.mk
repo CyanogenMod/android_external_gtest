@@ -85,6 +85,7 @@ LOCAL_SRC_FILES := gtest-all.cc
 LOCAL_C_INCLUDES := $(libgtest_host_includes)
 LOCAL_CFLAGS += $(libgtest_cflags)
 LOCAL_MODULE := libgtest_host
+LOCAL_MODULE_HOST_OS := darwin linux windows
 LOCAL_MULTILIB := both
 LOCAL_SANITIZE := never
 LOCAL_RTTI_FLAG := -frtti
@@ -101,6 +102,7 @@ LOCAL_SRC_FILES := gtest_main.cc
 LOCAL_C_INCLUDES := $(libgtest_host_includes)
 LOCAL_CFLAGS += $(libgtest_cflags)
 LOCAL_MODULE := libgtest_main_host
+LOCAL_MODULE_HOST_OS := darwin linux windows
 LOCAL_MULTILIB := both
 LOCAL_SANITIZE := never
 
