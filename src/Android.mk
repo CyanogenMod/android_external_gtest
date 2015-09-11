@@ -91,6 +91,7 @@ LOCAL_C_INCLUDES := $(libgtest_host_includes)
 LOCAL_CFLAGS += $(libgtest_cflags)
 LOCAL_EXPORT_C_INCLUDE_DIRS := $(libgtest_export_include_dirs)
 LOCAL_MODULE := libgtest_host
+LOCAL_MODULE_HOST_OS := darwin linux windows
 LOCAL_MULTILIB := both
 LOCAL_SANITIZE := never
 LOCAL_RTTI_FLAG := -frtti
@@ -108,6 +109,7 @@ LOCAL_C_INCLUDES := $(libgtest_host_includes)
 LOCAL_CFLAGS += $(libgtest_cflags)
 LOCAL_EXPORT_C_INCLUDE_DIRS := $(libgtest_export_include_dirs)
 LOCAL_MODULE := libgtest_main_host
+LOCAL_MODULE_HOST_OS := darwin linux windows
 LOCAL_MULTILIB := both
 LOCAL_SANITIZE := never
 
