@@ -1,0 +1,106 @@
+//
+// Copyright (C) 2009 The Android Open Source Project
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
+cc_defaults {
+    name: "gtest-defaults",
+    cflags: ["-Wno-empty-body"],
+    local_include_dirs: [
+        "../include",
+        ".."
+    ],
+    host_supported: true,
+}
+
+cc_test {
+    name: "gtest-unittest-api_test",
+    defaults: ["gtest-defaults"],
+    srcs: ["gtest-unittest-api_test.cc"],
+}
+
+cc_test {
+    name: "gtest_stress_test",
+    defaults: ["gtest-defaults"],
+    srcs: ["gtest_stress_test.cc"],
+}
+
+cc_test {
+    name: "gtest_sole_header_test",
+    defaults: ["gtest-defaults"],
+    srcs: ["gtest_sole_header_test.cc"],
+}
+
+cc_test {
+    name: "gtest_repeat_test",
+    defaults: ["gtest-defaults"],
+    srcs: ["gtest_repeat_test.cc"],
+}
+
+cc_test {
+    name: "gtest_premature_exit_test",
+    defaults: ["gtest-defaults"],
+    srcs: ["gtest_premature_exit_test.cc"],
+}
+
+cc_test {
+    name: "gtest-param-test2_test",
+    defaults: ["gtest-defaults"],
+    srcs: ["gtest-param-test2_test.cc"],
+}
+
+cc_test {
+    name: "gtest_no_test_unittest",
+    defaults: ["gtest-defaults"],
+    srcs: ["gtest_no_test_unittest.cc"],
+}
+
+cc_test {
+    name: "gtest_main_unittest",
+    defaults: ["gtest-defaults"],
+    srcs: ["gtest_main_unittest.cc"],
+}
+
+cc_test {
+    name: "gtest-listener_test",
+    defaults: ["gtest-defaults"],
+    srcs: ["gtest-listener_test.cc"],
+}
+
+cc_test {
+    name: "gtest_environment_test",
+    defaults: ["gtest-defaults"],
+    srcs: ["gtest_environment_test.cc"],
+}
+
+cc_test {
+    name: "gtest-death-test_test",
+    defaults: ["gtest-defaults"],
+    srcs: ["gtest-death-test_test.cc"],
+}
+
+cc_test {
+    name: "gtest_all_test",
+    defaults: ["gtest-defaults"],
+    srcs: ["gtest_all_test.cc"],
+}
+
+// We don't have exceptions.
+//    gtest-death-test_ex_test.cc
+//    gtest_throw_on_failure_ex_test.cc
+// We don't have tr1::tuple.
+//    gtest-tuple_test.cc
+// These don't build.
+//    gtest-param-test_test.cc
+//    gtest-printers_test.cc
