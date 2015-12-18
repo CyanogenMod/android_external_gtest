@@ -36,6 +36,16 @@ cc_defaults {
     ],
     cflags: ["-Wno-missing-field-initializers"],
     cppflags: ["-std=gnu++98"],
+    target: {
+        android: {
+            product_variables: {
+                unbundled_build: {
+                    // Don't build for unbundled branches
+                    enabled: false,
+                },
+            },
+        },
+    },
 }
 
 cc_defaults {
@@ -44,14 +54,6 @@ cc_defaults {
     target: {
         windows: {
             enabled: true,
-        },
-        host: {
-            product_variables: {
-                unbundled_build: {
-                    // Don't build for unbundled branches
-                    enabled: false,
-                },
-            },
         },
     },
 }
@@ -146,6 +148,14 @@ cc_test {
         host: {
             cflags: ["-O0"],
             ldflags: ["-lpthread"],
+        },
+        android: {
+            product_variables: {
+                unbundled_build: {
+                    // Don't build for unbundled branches
+                    enabled: false,
+                },
+            },
         },
     },
     test_per_src: true,
