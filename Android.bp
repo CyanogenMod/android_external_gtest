@@ -139,16 +139,8 @@ cc_test {
     name: "gtest",
     cflags: ["-Wno-empty-body"],
     local_include_dirs: ["include"],
-    static_libs: [
-        "libgtest_main",
-        "libgtest"
-    ],
     host_supported: true,
     target: {
-        host: {
-            cflags: ["-O0"],
-            ldflags: ["-lpthread"],
-        },
         android: {
             product_variables: {
                 unbundled_build: {
